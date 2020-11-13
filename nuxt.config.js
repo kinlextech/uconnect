@@ -47,7 +47,21 @@ export default {
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
-  axios: {},
+  axios: {
+    proxy: true
+  },
+  proxy: {
+    '/v/': {
+      target: 'http://127.0.0.1:3333/api/v1',
+      pathRewrite: { '^/v/': '' },
+      changeOrigin: true
+    },
+    '/vwater/':{
+      target: 'http://202.123.183.159:3000/test/api/clients/detail',
+      pathRewrite: { '^/vwater/': '' },
+      changeOrigin: true
+    }
+  },
 
   // Content module configuration (https://go.nuxtjs.dev/config-content)
   content: {},

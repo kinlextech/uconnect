@@ -1,8 +1,9 @@
 <template>
-  <v-app dark>
+  <v-app light>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
+      permanent
+      expand-on-hover
       :clipped="clipped"
       fixed
       app
@@ -22,13 +23,42 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
+
+        <v-list-group :value="true" prepend-icon="mdi-account-circle">
+          <template v-slot:activator>
+            <v-list-item-title>Biller Payment</v-list-item-title>
+          </template>
+
+          <v-list-group :value="true" no-action sub-group>
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title>Water</v-list-item-title>
+              </v-list-item-content>
+            </template>
+
+            <v-list-item link>
+              <v-list-item-title>Payment</v-list-item-title>
+
+              <v-list-item-icon>
+                <v-icon v-text="icon"></v-icon>
+              </v-list-item-icon>
+            </v-list-item>
+            <v-list-item link>
+              <v-list-item-title>View</v-list-item-title>
+
+              <v-list-item-icon>
+                <v-icon v-text="icon"></v-icon>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list-group>
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
       <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" /> -->
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
+      <!-- <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? "right" : "left"}` }}</v-icon>
-      </v-btn>
+      </v-btn> -->
       <!-- <v-btn icon @click.stop="clipped = !clipped">
         <v-icon>mdi-application</v-icon>
       </v-btn> -->
@@ -37,10 +67,8 @@
       </v-btn> -->
       <v-toolbar-title v-text="title" />
     </v-app-bar>
-    <v-main>
-      <v-container>
-        <nuxt />
-      </v-container>
+    <v-main class="ma-3">
+      <nuxt />
     </v-main>
     <v-footer :absolute="!fixed" app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
@@ -58,19 +86,14 @@ export default {
       items: [
         {
           icon: "mdi-apps",
-          title: "Welcome",
+          title: "WORK FLOW",
           to: "/",
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "Inspire",
-          to: "/inspire",
         },
       ],
       miniVariant: true,
       right: true,
       rightDrawer: true,
-      title: "Vuetify.js",
+      title: "BCNEX",
     };
   },
 };
