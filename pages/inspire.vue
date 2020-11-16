@@ -1,72 +1,122 @@
 <template>
   <section>
-    <v-card style="max-width:800px;">
-      <v-card-text >
-        <v-row>
-          
-          <v-text-field v-model="clid" solo dense placeholder="ກາລຸນາປ້ອນເລກບັນຊີລູກຄ້າ"></v-text-field
-          ><v-btn @click="initDataBill" class="ml-2">CHECK</v-btn>
+    <v-card>
+      <h3 class="ml-5 pt-3">
+        Water Bill payment
+        <v-btn
+          class="primary mt-0 mr-3"
+          style="float: right"
+          @click="initDataBillreset"
+          v-if="billerDetail['data']"
+        >
+          RESET</v-btn
+        >
+      </h3>
+      <v-card-text>
+        <v-row v-if="!billerDetail['data']">
+          <v-text-field
+            solo
+            dense
+            v-model="clid"
+            placeholder="Water Bill Payment"
+            @change="initDataBill"
+          ></v-text-field>
+          <v-btn class="primary mt-0" @click="initDataBill"> Search</v-btn>
         </v-row>
-        <v-row>
-          <v-col cols="8">
-            <v-tabs>
-              <v-tab disabled style="color: white"
-                >Water Payment - 000000000</v-tab
-              >
-              <v-tab> Detail </v-tab>
-              <v-tab>History 10 ROWS</v-tab>
-              <v-tab-item></v-tab-item>
-              <v-tab-item>
-                <v-card-text>
+
+        <section v-if="billerDetail['data']">
+          <!-- {{ billerDetail }} -->
+          <v-row>
+            <v-col>
+              <v-tabs>
+                <v-tab disabled
+                  >Water Client ID - {{ billerDetail["data"].CLIENT_ID }}</v-tab
+                >
+                <v-tab>Detail</v-tab>
+                <v-tab>History 10 ROW</v-tab>
+                <v-tab-item> </v-tab-item>
+                <v-tab-item>
                   <table>
-                    <tr
-                      v-for="(itm, index) in $store.state.INQ.billerdail[
-                        'data'
-                      ]"
-                      :key="index"
-                    >
-                      <td>ເລກບິນ</td>
-                      <td>: {{ itm }}</td>
+                    <tr>
+                      <td>ເລກບັນຊີຜູ້ໃຊ້ນ້ຳ</td>
+                      <td>: {{ billerDetail["data"].CLIENT_ID }}</td>
                     </tr>
-                    <!-- <tr>
+                    <tr>
                       <td>ຊື່ ແລະ ນາມສະກຸນ</td>
-                      <td>: {{ $store.state.INQ.billerdail["data"] }}</td>
-                    </tr>
-                    <tr>
-                      <td>ແຂວງ</td>
-                      <td>: {{ $store.state.INQ.billerdail["data"] }}</td>
-                    </tr>
-                    <tr>
-                      <td>ເມືອງ</td>
-                      <td>: {{ $store.state.INQ.billerdail["data"] }}</td>
+                      <td>: {{ billerDetail["data"].CLIENT_NAME }}</td>
                     </tr>
                     <tr>
                       <td>ບ້ານ</td>
-                      <td>: {{ $store.state.INQ.billerdail["data"] }}</td>
-                    </tr> -->
+                      <td>: {{ billerDetail["data"].VILLAGE_NAME }}</td>
+                    </tr>
+                    <tr>
+                      <td>ເມືອງ</td>
+                      <td>: {{ billerDetail["data"].DISTRICT_NAME }}</td>
+                    </tr>
                   </table>
-                  {{ billerDetail }}
+                </v-tab-item>
+                <v-tab-item></v-tab-item>
+              </v-tabs>
+            </v-col>
+            <v-col>
+              <v-card elevation="0">
+                <v-card-title
+                  >ລາຍລະອຽດການຈ່າຍ <v-spacer></v-spacer>
+                  {{ billerDetail["data"].CLIENT_ID }}</v-card-title
+                >
+                <v-card-text>
+                  <h3 class="mb-2 mt-4">
+                    ເລກທີໃບບິນ
+                    <strong style="float: right">
+                      <v-chip class="ml-1" :input-value="active" filter v-for="(itm,index) in billerDetail['detail']['data']" :key="index">
+                        {{ billerDetail["detail"]["data"][index]["BILL_NO"] }}
+                      </v-chip></strong>
+                  </h3>
+                  <v-divider></v-divider>
+                  <h3 class="mb-2 mt-4">
+                    ປະຈຳເດືອນ
+                    <strong style="float: right">
+                      <v-chip class="ml-1" :input-value="active" filter v-for="(itm,index) in billerDetail['detail']['data']" :key="index">
+                        {{ billerDetail["detail"]["data"][index]["BILL_MONTH"] }}
+                      </v-chip></strong>
+                  </h3>
+                  <v-divider></v-divider>
+                  <h3 class="mb-2 mt-4">
+                    ລວມຈຳນວນເງິນ
+                    <strong style="float: right">
+                      {{
+                        billerDetail["data"].TOTAL_DEBT | formatPrice
+                      }} ກີບ</strong
+                    >
+                  </h3>
+                  <v-divider></v-divider>
+                  <h3 class="mb-2 mt-4">
+                    ໜີ້ຄ້າງຈ່າຍ <strong style="float: right">0 ກີບ</strong>
+                  </h3>
+                  <v-divider></v-divider>
+                  <v-text-field
+                    placeholder="ປ້ອນຈຳນວນເງິນ"
+                    v-model="valoth"
+                    value="0"
+                    v-if="btnoth == 1"
+                  ></v-text-field>
+                  <v-card-actions>
+                    <v-btn class="warning mr-3" style="width: 50%" elevation="0"
+                    @click="btnoth == 1"
+                      >ເລືອກຊຳລະຈຳນວນອື່ນ</v-btn
+                    >
+                    <v-spacer></v-spacer>
+                    <v-btn class="primary" style="width: 50%" elevation="0"
+                      >ຊຳລະດຽວນີ້
+                      {{ (billerDetail["data"].TOTAL_DEBT + 0) | formatPrice }}
+                      ກີບ</v-btn
+                    >
+                  </v-card-actions>
                 </v-card-text>
-              </v-tab-item>
-              <v-tab-item>
-                <v-data-table
-                  :headers="headers"
-                  :items="desserts"
-                  :items-per-page="5"
-                  class="elevation-1"
-                ></v-data-table>
-              </v-tab-item>
-            </v-tabs>
-          </v-col>
-          <v-col>
-            <v-tabs>
-              <v-tab>Detail</v-tab>
-              <v-tab>History 10 ROWS</v-tab>
-              <v-tab-item></v-tab-item>
-              <v-tab-item>HIST</v-tab-item>
-            </v-tabs>
-          </v-col>
-        </v-row>
+              </v-card>
+            </v-col>
+          </v-row>
+        </section>
       </v-card-text>
     </v-card>
   </section>
@@ -75,9 +125,13 @@
 <script>
 import { mapState } from "vuex";
 export default {
+  // middleware: "auth",
   data() {
     return {
       clid: "",
+      valoth: 0,
+      btnoth:0,
+      active:'',
       headers: [
         {
           text: "Dessert (100g serving)",
@@ -175,6 +229,12 @@ export default {
       ],
     };
   },
+  filters: {
+    formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(".", ",");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    },
+  },
   computed: {
     billerDetail() {
       let dt = {
@@ -209,6 +269,9 @@ export default {
       this.$store.dispatch("INQ/GETWALTERHISTORY", {
         clid: this.clid,
       });
+    },
+    async initDataBillreset() {
+      this.$store.commit("INQ/GET_BILL", "");
     },
   },
 };

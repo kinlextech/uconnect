@@ -77,12 +77,14 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
       clipped: true,
       drawer: true,
       fixed: true,
+      icon: "",
       items: [
         {
           icon: "mdi-apps",
@@ -95,6 +97,9 @@ export default {
       rightDrawer: true,
       title: "BCNEX",
     };
+  },
+  computed: {
+    ...mapGetters(["isAuthenticated", "loggedInUser"]),
   },
 };
 </script>

@@ -66,23 +66,23 @@ export default {
   // Content module configuration (https://go.nuxtjs.dev/config-content)
   content: {},
 
-  // auth: {
-  //   strategies: {
-  //     local: {
-  //       endpoints: {
-  //         login: {url: '/login', method: 'post', propertyName: 'token' },
-  //         user: {url: '/user', method: 'get', propertyName: false },
-  //         logout: false,
-  //       }
-  //     }
-  //   }
-  // },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: 'v/auth/login', method: 'post', propertyName: 'data.token' },
+          user: { url: 'v/auth/uprofile', method: 'get', propertyName: 'data' },
+          logout: false
+        }
+      }
+    }
+  },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,
